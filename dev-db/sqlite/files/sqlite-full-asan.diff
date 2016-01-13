@@ -1,0 +1,11 @@
+--- a/configure.ac	2015-11-02 19:44:00.000000000 +0100
++++ b/configure.ac	2016-01-01 19:21:19.960000000 +0100
+@@ -195,7 +195,7 @@
+ AC_SUBST(SQLITE_THREADSAFE)
+ 
+ if test "$SQLITE_THREADSAFE" = "1"; then
+-  AC_SEARCH_LIBS(pthread_create, pthread)
++  AC_SEARCH_LIBS(pthread_mutexattr_init, pthread)
+ fi
+ 
+ ##########
