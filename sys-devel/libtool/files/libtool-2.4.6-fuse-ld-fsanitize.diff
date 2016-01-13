@@ -1,0 +1,34 @@
+diff -Naur a/build-aux/ltmain.in b/build-aux/ltmain.in
+--- a/build-aux/ltmain.in	2015-02-06 13:57:56.000000000 +0100
++++ b/build-aux/ltmain.in	2016-01-13 19:36:20.764741436 +0100
+@@ -5360,10 +5360,12 @@
+       # -tp=*                Portland pgcc target processor selection
+       # --sysroot=*          for sysroot support
+       # -O*, -g*, -flto*, -fwhopr*, -fuse-linker-plugin GCC link-time optimization
++      # -fuse-ld=*           Linker select flags for GCC
+       # -stdlib=*            select c++ std lib with clang
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+-      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*)
++      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*| \
++      -fuse-ld=*|-fsanitize=*)
+         func_quote_for_eval "$arg"
+ 	arg=$func_quote_for_eval_result
+         func_append compile_command " $arg"
+diff -Naur a/build-aux/ltmain.sh b/build-aux/ltmain.sh
+--- a/build-aux/ltmain.sh	2015-02-15 17:15:12.000000000 +0100
++++ b/build-aux/ltmain.sh	2016-01-13 19:34:56.486747744 +0100
+@@ -7272,10 +7272,12 @@
+       # -tp=*                Portland pgcc target processor selection
+       # --sysroot=*          for sysroot support
+       # -O*, -g*, -flto*, -fwhopr*, -fuse-linker-plugin GCC link-time optimization
++      # -fuse-ld=*           Linker select flags for GCC
+       # -stdlib=*            select c++ std lib with clang
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+-      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*)
++      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*| \
++      -fuse-ld=*|-fsanitize=*)
+         func_quote_for_eval "$arg"
+ 	arg=$func_quote_for_eval_result
+         func_append compile_command " $arg"
