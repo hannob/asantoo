@@ -1,7 +1,9 @@
 post_src_prepare() {
 	einfo Fixing libtool CFLAGS filtering for asan
 	for f in $(find -name ltmain.sh); do
-		einfo Fixing $f
-		sed -i -e 's:|-fprofile:|-fsanitize=*|-fprofile:g' $f
+		if ! grep -q fsanitize $f ; then
+			einfo Fixing $f
+			sed -i -e 's:|-fprofile:|-fsanitize=*|-fprofile:g' $f
+		fi
 	done
 }
