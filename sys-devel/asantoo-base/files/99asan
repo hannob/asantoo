@@ -1,0 +1,1 @@
+ASAN_OPTIONS="abort_on_error=1:log_path=/var/log/asan/asan-error:detect_leaks=0:log_exe_name=1"

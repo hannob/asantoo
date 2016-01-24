@@ -1,0 +1,3 @@
+CFLAGS="${CFLAGS} -lpthread"
+CXXFLAGS="${CXXFLAGS} -lpthread"
+LDFLAGS="${LDFLAGS} -lpthread"

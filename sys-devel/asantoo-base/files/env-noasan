@@ -1,0 +1,3 @@
+CFLAGS="${CFLAGS} -fno-sanitize=address"
+CXXFLAGS="${CXXFLAGS} -fno-sanitize=address"
+LDFLAGS="${LDFLAGS} -fno-sanitize=address"
