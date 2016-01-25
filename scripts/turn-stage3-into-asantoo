@@ -1,0 +1,91 @@
+#!/bin/bash
+
+function prepare() {
+	[[ -e /etc/resolv.conf ]] || echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+	echo \* Setting python to 3.4, avoids python/portage recursion problem
+	eselect python set python3.4
+
+	echo \* sync or create portage tree
+	emerge -q --sync
+	[[ $? -ne 0 ]] && echo "Failed to run emerge --sync" && exit 1
+
+	if ! [[ -e /usr/bin/git ]]; then
+		echo \* emerge git to allow checkout of asantoo overlay
+		USE="curl -gpg -pcre -perl -python -webdav" emerge -qu dev-vcs/git
+		[[ $? -ne 0 ]] && echo "Failed to merge git" && exit 1
+	fi
+
+	echo \* add asan flags and overlay to make.conf
+	cat >> /etc/portage/make.conf << "EOF"
+CFLAGS="${CFLAGS} -fsanitize=address"
+CXXFLAGS="${CXXFLAGS} -fsanitize=address"
+LDFLAGS="${LDFLAGS} -fsanitize=address"
+PORTDIR_OVERLAY="${PORTDIR_OVERLAY} /usr/local/asantoo"
+EOF
+
+	echo \* add asantoo overlay to repos.conf
+	echo "
+[asantoo]
+location = /usr/local/asantoo
+sync-type = git
+sync-uri = https://github.com/hannob/asantoo.git
+auto-sync = true" \
+	>> /etc/portage/repos.conf
+
+	echo \* sync again to get asantoo overlay
+	emerge -q --sync asantoo
+	[[ $? -ne 0 ]] && echo "Failed to run emerge --sync" && exit 1
+
+	echo \* emerge asantoo-base config files
+	emerge -q asantoo-base
+	[[ $? -ne 0 ]] && echo "Failed to merge asantoo-base" && exit 1
+}
+
+function core() {
+	echo \* merge libtool to avoid -fsanitize filtering in libtool
+	emerge -q1 libtool
+	[[ $? -ne 0 ]] && echo "Failed to merge libtool" && exit 1
+
+	echo \* merge important tools to keep portage running
+	emerge -q1 wget gzip tar texinfo man-db patch sed bash libxml2 gettext grep coreutils dev-util/pkgconfig
+	[[ $? -ne 0 ]] && echo "Failed to merge wget gzip tar texinfo man-db ..." && exit 1
+
+	echo \* merge portage itself
+	emerge -q1 portage
+	[[ $? -ne 0 ]] && echo "Failed to merge portage" && exit 1
+
+	echo \* merge python
+	for i in /usr/bin/python?.?; do
+		emerge -1 dev-lang/python:${i#/usr/bin/python}
+		[[ $? -ne 0 ]] && echo "Failed to merge python" && exit 1
+	done
+
+}
+
+function rest() {
+	echo \* Install updates
+	emerge --keep-going y -quD world
+
+	# emerge all the rest
+	pkglist=$(grep -vl fsanitize /var/db/pkg/*-*/*/CFLAGS|sed -e 's:/var/db/pkg/:=:g' -e 's:/CFLAGS::g' | grep -v 'dev-libs/gmp\|dev-libs/mpc\|dev-libs/mpfr\|sys-apps/busybox\|sys-devel/gcc\|sys-libs/glibc\|sys-libs/zlib\|sys-apps/sandbox\|dev-libs/libltdl')
+
+	# regexp to remove versionnumbers, not used right now
+	# sed -r -e 's:-[0-9.]*([a-z])?(_[prcbeta0-9]+)?(-r[0-9]+)?$::g'
+
+	echo $pkglist
+	emerge --keep-going y -q1 $pkglist
+	[[ $? -ne 0 ]] && echo "Failed to merge some packages" && exit 1
+}
+
+if [[ "$1" = "prepare" ]]; then
+	prepare
+elif [[ "$1" == "core" ]]; then
+	core
+elif [[ "$1" == "rest" ]]; then
+	rest
+else
+	prepare
+	core
+	rest
+fi
