@@ -15,10 +15,10 @@ licenses
 The ebuilds in this overlay are derived from their respective packages in
 Gentoo's portage tree. Thus the same license and copyright applies. Gentoo
 ebuilds are published under the
-[https://www.gnu.org/licenses/old-licenses/gpl-2.0.html GPL version 2] by
+[GPL version 2 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html] by
 the Gentoo Foundation.
 
 The content of the scripts folder and the config files installed by the
 asantoo-base package are licensed under
-[https://creativecommons.org/publicdomain/zero/1.0/ CC0] (which is basically
+[CC0 https://creativecommons.org/publicdomain/zero/1.0/] (which is basically
 like public domain).
