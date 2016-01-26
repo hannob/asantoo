@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# author: Hanno Böck
+# license: CC0 / public domain
+
 function prepare() {
 	[[ -e /etc/resolv.conf ]] || echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
