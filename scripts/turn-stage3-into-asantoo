@@ -51,7 +51,7 @@ function core() {
 	[[ $? -ne 0 ]] && echo "Failed to merge libtool" && exit 1
 
 	echo \* merge important tools to keep portage running
-	emerge -q1 wget gzip tar texinfo man-db patch sed bash libxml2 gettext grep coreutils dev-util/pkgconfig
+	emerge -q1 wget gzip tar texinfo man-db patch sed bash libxml2 gettext grep coreutils dev-util/pkgconfig gawk
 	[[ $? -ne 0 ]] && echo "Failed to merge wget gzip tar texinfo man-db ..." && exit 1
 
 	echo \* merge portage itself
