@@ -21,9 +21,9 @@ function prepare() {
 
 	echo \* add asan flags and overlay to make.conf
 	cat >> /etc/portage/make.conf << "EOF"
-CFLAGS="${CFLAGS} -fsanitize=address"
-CXXFLAGS="${CXXFLAGS} -fsanitize=address"
-LDFLAGS="${LDFLAGS} -fsanitize=address"
+CFLAGS="${CFLAGS} -fsanitize=address -U_FORTIFY_SOURCE"
+CXXFLAGS="${CXXFLAGS} -fsanitize=address -U_FORTIFY_SOURCE"
+LDFLAGS="${LDFLAGS} -fsanitize=address -U_FORTIFY_SOURCE"
 PORTDIR_OVERLAY="${PORTDIR_OVERLAY} /usr/local/asantoo"
 EOF
 
