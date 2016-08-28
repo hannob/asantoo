@@ -46,6 +46,8 @@ auto-sync = true" \
 }
 
 function core() {
+	. /etc/profile
+
 	echo \* merge libtool to avoid -fsanitize filtering in libtool
 	emerge -q1 libtool
 	[[ $? -ne 0 ]] && echo "Failed to merge libtool" && exit 1
@@ -67,6 +69,8 @@ function core() {
 }
 
 function rest() {
+	. /etc/profile
+
 	echo \* Install updates
 	emerge --keep-going y -quD world
 
